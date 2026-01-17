@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>AI Feedback</h4>
+<ul>{% for s in ai_feedback.skills %}<li>{{ s }}</li>{% endfor %}</ul>
+{% endblock %}

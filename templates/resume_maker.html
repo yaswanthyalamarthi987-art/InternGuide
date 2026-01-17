@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card reveal">
+<h2>Advanced Resume Builder</h2>
+<p class="text-muted">Add multiple entries using + buttons. Generates ATS-friendly resume.</p>
+
+<form id="resumeForm">
+
+<label class="mt-3">Full Name</label>
+<input class="form-control" id="name" required>
+
+<label class="mt-3">Email</label>
+<input class="form-control" id="email" required>
+
+<!-- EDUCATION -->
+<h5 class="mt-4">Education</h5>
+<div id="educationFields">
+  <input class="form-control mb-2 edu" placeholder="Education detail">
+</div>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('educationFields','edu')">+ Add Education</button>
+
+<!-- TECH SKILLS -->
+<h5 class="mt-4">Technical Skills</h5>
+<div id="skillsFields">
+  <input class="form-control mb-2 skill" placeholder="Skill">
+</div>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('skillsFields','skill')">+ Add Skill</button>
+
+<!-- SKILLS IN ROLE -->
+<h5 class="mt-4">Skills Acquired in Role</h5>
+<div id="roleSkillsFields">
+  <input class="form-control mb-2 roleSkill" placeholder="Skill acquired">
+</div>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('roleSkillsFields','roleSkill')">+ Add</button>
+
+<!-- ACHIEVEMENTS -->
+<h5 class="mt-4">Achievements</h5>
+<div id="achievementsFields">
+  <input class="form-control mb-2 achievement" placeholder="Achievement">
+</div>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('achievementsFields','achievement')">+ Add Achievement</button>
+
+<!-- EXPERIENCE -->
+<h5 class="mt-4">Experience</h5>
+<div id="experienceFields">
+  <input class="form-control mb-2 experience" placeholder="Experience detail">
+</div>
+<button type="button" class="btn btn-sm btn-outline-primary" onclick="addField('experienceFields','experience')">+ Add Experience</button>
+
+<div class="mt-4">
+<button type="button" class="btn btn-primary btn-lg" onclick="submitResume()">Generate Resume</button>
+</div>
+
+</form>
+</div>
+
+<script>
+function addField(containerId, className){
+  const div=document.createElement("input");
+  div.className="form-control mb-2 "+className;
+  document.getElementById(containerId).appendChild(div);
+}
+
+function collect(className){
+  return Array.from(document.getElementsByClassName(className))
+    .map(e=>e.value).filter(v=>v.trim());
+}
+
+function submitResume(){
+  fetch("/api/build-resume",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({
+      name:document.getElementById("name").value,
+      email:document.getElementById("email").value,
+      education:collect("edu"),
+      technical_skills:collect("skill"),
+      skills_acquired:collect("roleSkill"),
+      achievements:collect("achievement"),
+      experience:collect("experience")
+    })
+  })
+  .then(res=>res.json())
+  .then(d=>{
+    window.location.href=d.file;
+  });
+}
+</script>
+
+{% endblock %}

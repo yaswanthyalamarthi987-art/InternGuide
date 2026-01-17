@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Detected Skills</h4>
+{% for s in detected_skills %}<span class="badge bg-primary m-1">{{ s }}</span>{% endfor %}
+{% endblock %}

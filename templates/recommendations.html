@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
+<h4>Recommendations</h4>
+<ul>{% for r in recommendations %}<li>{{ r }}</li>{% endfor %}</ul>
+{% endblock %}
